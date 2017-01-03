@@ -28,7 +28,6 @@ class MyModule extends Module
         $this->displayName = $this->l('Shortcode');
         $this->description = $this->l('Description of my module.');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
-
     }
 
 
@@ -69,8 +68,9 @@ class MyModule extends Module
         $id_tab = (int)Tab::getIdFromClassName($class_name);
         // Load tab
         $tab = new Tab((int)$id_tab);
+        $tab->delete();
 
-        return $tab->delete();
+        return parent::uninstall();
     }
 
 

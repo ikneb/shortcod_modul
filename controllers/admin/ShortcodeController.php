@@ -26,13 +26,23 @@ class ShortcodeController extends ModuleAdminController
             ),
             'input' => array(
                 array('type' => 'text', 'label' => $this->l('Name'), 'name' =>
-                    'shortcode_name', 'size' => 50, 'required' => true),
+                    'shortcode_name', 'size' => 50, 'lang' => true, 'required' => true),
                 array('type' => 'text', 'label' => $this->l('Description'), 'name' =>
-                    'shortcode_description', 'size' => 50, 'required' => true),
+                    'shortcode_description', 'size' => 50,'lang' => true, 'required' => false),
                 array('type' => 'textarea', 'label' => $this->l('Content'), 'name' =>
-                    'shortcode_content', 'cols' => 50, 'rows' => 5, 'required' => false),
-                array('type' => 'text', 'label' => $this->l('status'), 'name' =>
-                        'shortcode_status', 'size' => 30, 'required' => true),
+                    'shortcode_content', 'cols' => 50, 'rows' => 5, 'lang' => true, 'required' => true),
+
+                 array(
+                    'type' => 'radio',
+                    'label' => $this->l('Status'),
+                    'name' => 'shortcode_status',
+                     //'required' => false,
+                    //'is_bool' => true,
+                    'values' => array(
+                        array( 'id' => 'active_on', 'value' => 1, 'label' => $this->l('Yes')),
+                        array( 'id' => 'active_off', 'value' => 0, 'label' => $this->l('No')),
+                    )
+                ),
                 ),
                 'submit' => array('title' => $this->l('Save'))
         );
@@ -41,6 +51,8 @@ class ShortcodeController extends ModuleAdminController
 
     public function renderList()
     {
+        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+
         $this->addRowAction('edit');
         $this->addRowAction('delete');
 
@@ -50,33 +62,48 @@ class ShortcodeController extends ModuleAdminController
                 'confirm' => $this->l('Delete selected items?')
             )
         );
-        $this->fields_list = array(
-            'id_shortcode_data' => array(
+
+
+       $this->_select .= 'a.`id_shortcode_data`, s.`shortcode_name`, s.`shortcode_description`, s.`shortcode_content`, a.`shortcode_status`';
+       $this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'shortcode_data_lang` s ON s.`id_shortcode_data` = a.`id_shortcode_data`';
+        $this->_where = 'AND s.`id_lang` = '. $default_lang;
+
+        $this->fields_list = array();
+
+            $this->fields_list['id_shortcode_data'] = array(
                 'title' => $this->l('ID'),
                 'align' => 'center',
                 'width' => 25
-            ),
-            'shortcode_name' => array(
+            );
+
+            $this->fields_list['shortcode_name'] = array(
                 'title' => $this->l('Name'),
                 'width' => 200,
-            ),
-            'shortcode_description' => array(
+            );
+            $this->fields_list['shortcode_description'] = array(
                 'title' => $this->l('Description'),
                 'width' => 500,
-            ),
-            'shortcode_content' => array(
-                'title' => $this->l('Content'),
-                'width' => 500,
-            ),
-            'shortcode_status' => array(
-                'title' => $this->l('Status'),
-                'width' => 50,
-            ),
-        );
+            );
+            $this->fields_list['shortcode_content'] = array(
+                    'title' => $this->l('Content'),
+                    'width' => 500,
+            );
+            $this->fields_list['shortcode_status'] = array(
+                    'title' => $this->l('Status'),
+                    'width' => 50,
+                    'align' => 'center',
+                    'active' => 'status',
+                    'icon' => array(
+                        0 => 'disabled.gif',
+                        1 => 'enabled.gif',
+                        'default' => 'disabled.gif'
+                    ),
+            );
 
-        $lists = parent::renderList();
-        parent::initToolbar();
-      return $lists;
+
+
+
+        return parent::renderList();;
     }
 
 }

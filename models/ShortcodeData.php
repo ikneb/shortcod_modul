@@ -7,7 +7,7 @@ class ShortcodeData extends ObjectModel
     public $shortcode_name;
     public $shortcode_description;
     public $shortcode_content;
-    public $shortcode_status;
+    public $shortcode_status = 0;
 
 
 
@@ -15,12 +15,12 @@ class ShortcodeData extends ObjectModel
         'table' => 'shortcode_data',
         'primary' => 'id_shortcode_data',
         'multilang' => true,
+        'multilang_shop' => true,
         'fields' => array(
-
-            'shortcode_name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 50),
-            'shortcode_description' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => false, 'size' => 50),
-            'shortcode_content' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => false, 'size' => 255),
-            'shortcode_status' => 		array('type' => self::TYPE_INT, 'validate' => 'isGenericName', 'required' => false, 'size' => 1),
+            'shortcode_name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 50),
+            'shortcode_description' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'lang' => true, 'required' => false, 'size' => 50),
+            'shortcode_content' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'lang' => true, 'required' => false, 'size' => 255),
+            'shortcode_status' => 		array('type' => self::TYPE_INT,  'validate' => 'isInt'),
         ),
     );
 
