@@ -17,10 +17,10 @@ class ShortcodeData extends ObjectModel
         'multilang' => true,
         'multilang_shop' => true,
         'fields' => array(
-            'shortcode_name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 50),
+            'shortcode_name' => 		    array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => false, 'size' => 50),
             'shortcode_description' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'lang' => true, 'required' => false, 'size' => 50),
-            'shortcode_content' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'lang' => true, 'required' => false, 'size' => 255),
-            'shortcode_status' => 		array('type' => self::TYPE_INT,  'validate' => 'isInt'),
+            'shortcode_content' => 		    array('type' => self::TYPE_STRING,  'lang' => true, 'required' => false, 'size' => 255),
+            'shortcode_status' => 		    array('type' => self::TYPE_INT,  'validate' => 'isInt'),
         ),
     );
 

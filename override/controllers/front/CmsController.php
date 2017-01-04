@@ -3,8 +3,6 @@
 
 class CmsController extends CmsControllerCore
 {
-   
-
 
     public function initContent()
     {
@@ -28,10 +26,8 @@ class CmsController extends CmsControllerCore
 
     public function returnContent($contents)
     {
-        
        return  preg_replace_callback('/{\$shortcode_%(.*?)%}/ism',
             array($this, 'renderModule'), $contents);
-
     }
 
     protected function renderModule($text)
@@ -42,6 +38,7 @@ class CmsController extends CmsControllerCore
             if($row['shortcode_status']==1)
                 $content = $row['shortcode_content'];
 
-        return $content;
+        return  $content;
+
     }
 }

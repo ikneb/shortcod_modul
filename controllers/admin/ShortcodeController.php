@@ -15,7 +15,6 @@ class ShortcodeController extends ModuleAdminController
         $this->bootstrap = true;
 
 
-        /* $this->fieldImageSettings = array('name' => 'image', 'dir' => 'example');*/
 		parent::__construct();
 
 
@@ -25,19 +24,37 @@ class ShortcodeController extends ModuleAdminController
                 'image' => '../img/admin/contact.gif'
             ),
             'input' => array(
-                array('type' => 'text', 'label' => $this->l('Name'), 'name' =>
-                    'shortcode_name', 'size' => 50, 'lang' => true, 'required' => true),
-                array('type' => 'text', 'label' => $this->l('Description'), 'name' =>
-                    'shortcode_description', 'size' => 50,'lang' => true, 'required' => false),
-                array('type' => 'textarea', 'label' => $this->l('Content'), 'name' =>
-                    'shortcode_content', 'cols' => 50, 'rows' => 5, 'lang' => true, 'required' => true),
+                array('type' => 'text',
+                    'label' => $this->l('Name'),
+                    'name' => 'shortcode_name',
+                    'size' => 50,
+                    'lang' => true,
+                    'required' => true
+                ),
+                array('type' => 'text',
+                    'label' => $this->l('Description'),
+                    'name' => 'shortcode_description',
+                    'size' => 50,
+                    'lang' => true,
+                    'required' => false
+                ),
 
-                 array(
+                array(
+                    'type' => 'textarea',
+                    'name' => 'shortcode_content',
+                    'cols' => 50,
+                    'rows' => 5,
+                    'lang' => true,
+                    'required' => true,
+                    'autoload_rte' => true,
+                ),
+               
+                array(
                     'type' => 'radio',
                     'label' => $this->l('Status'),
                     'name' => 'shortcode_status',
-                     //'required' => false,
-                    //'is_bool' => true,
+                     'required' => true,
+                     'is_bool' => true,
                     'values' => array(
                         array( 'id' => 'active_on', 'value' => 1, 'label' => $this->l('Yes')),
                         array( 'id' => 'active_off', 'value' => 0, 'label' => $this->l('No')),
@@ -46,6 +63,7 @@ class ShortcodeController extends ModuleAdminController
                 ),
                 'submit' => array('title' => $this->l('Save'))
         );
+
 
     }
 

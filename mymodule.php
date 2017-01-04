@@ -44,7 +44,30 @@ class MyModule extends Module
         if (Shop::isFeatureActive())
             Shop::setContext(Shop::CONTEXT_ALL);
 
-        return parent::install();
+        return parent::install() &&
+        $this->registerHook('displayTop') &&
+        $this->registerHook('backOfficeHeader');
+    }
+
+    public function hookBackOfficeHeader($params){
+        $this->context->controller->addJquery();
+        $this->context->controller->addJS($this->_path . 'views/js/mymod.js');
+        $this->context->controller->addCSS($this->_path . 'views/css/mymod.css', 'all');
+    }
+
+    public function hookDisplayTop($params)
+    {
+        $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $shortcodes = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'shortcode_data
+           LEFT JOIN ' . _DB_PREFIX_ . 'shortcode_data_lang
+           ON  ' . _DB_PREFIX_ . 'shortcode_data.id_shortcode_data = ' . _DB_PREFIX_ . 'shortcode_data_lang.id_shortcode_data
+           WHERE ' . _DB_PREFIX_ . 'shortcode_data_lang.id_lang = '. $default_lang );
+
+        foreach($shortcodes as $shortcode){
+            $shortcode_name = $shortcode['shortcode_name'];
+            $shortcode_content = $shortcode['shortcode_status'] ? $shortcode_name : '';
+            $this->context->smarty->assign('shortcode_'. $shortcode_name, $shortcode_content);
+        }
     }
 
     public function installTab($parent, $class_name, $name)

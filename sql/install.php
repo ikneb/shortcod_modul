@@ -23,7 +23,6 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'shortcode_data_lang` (
 `id_shop` int(10) NOT NULL,
 `shortcode_name` varchar(50) NOT NULL,
 `shortcode_description` varchar(50) NOT NULL,
-`shortcode_content` varchar(255) NOT NULL,
-`shortcode_status` int(1) NOT NULL
+`shortcode_content` varchar(255) NOT NULL
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
