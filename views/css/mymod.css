@@ -1,3 +1,11 @@
-.shortcode__tinymce {
+
+
+
+.shortcode__wrapper-tinymce, .shortcode__wrapper-file{
     display: none;
+}
+
+.shortcode__select {
+    margin: 40px 0 0 7px;
+    width: 200px;
 }

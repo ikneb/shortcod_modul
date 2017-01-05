@@ -50,9 +50,11 @@ class MyModule extends Module
     }
 
     public function hookBackOfficeHeader($params){
+
+        $this->context->controller->addCSS($this->_path . 'views/css/mymod.css', 'all');
         $this->context->controller->addJquery();
         $this->context->controller->addJS($this->_path . 'views/js/mymod.js');
-        $this->context->controller->addCSS($this->_path . 'views/css/mymod.css', 'all');
+
     }
 
     public function hookDisplayTop($params)

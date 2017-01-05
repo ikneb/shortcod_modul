@@ -34,6 +34,7 @@ class ShortcodeController extends ModuleAdminController
                 array('type' => 'text',
                     'label' => $this->l('Description'),
                     'name' => 'shortcode_description',
+                    'class' => 'shortcode__description',
                     'size' => 50,
                     'lang' => true,
                     'required' => false
@@ -43,12 +44,34 @@ class ShortcodeController extends ModuleAdminController
                     'type' => 'textarea',
                     'name' => 'shortcode_content',
                     'cols' => 50,
+                    'class'=> 'shortcode__tinymce',
                     'rows' => 5,
                     'lang' => true,
                     'required' => true,
                     'autoload_rte' => true,
                 ),
-               
+
+                array(
+                    'type' => 'textarea',
+                    'name' => 'shortcode_content',
+                    'cols' => 50,
+                    'class'=>'shortcode__textarea',
+                    'rows' => 5,
+                    'lang' => true,
+                    'required' =>   true,
+                ),
+
+                array(
+                    'type'   =>   'file',
+                    'label'  =>   $this->l('Select a file:'),
+                    'desc'  =>  $this->l('Banner picture. Extension allowed: jpeg, png, jpg, gif.'),
+                    'name'   =>   'shortcode_content',
+                    'required' =>   true,
+                    'class'=>'shortcode__file',
+                    'lang'  =>  false,
+                    'display_image' => true,
+                ),
+
                 array(
                     'type' => 'radio',
                     'label' => $this->l('Status'),
@@ -64,6 +87,9 @@ class ShortcodeController extends ModuleAdminController
                 'submit' => array('title' => $this->l('Save'))
         );
 
+        if(preg_match('/[а-я]/ui', Tools::getValue('shortcode_name'))){
+            $this->errors[] = Tools::displayError('!!!!!!!!!!!!!!!!!!!!');
+        }
 
     }
 
