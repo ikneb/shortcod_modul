@@ -45,17 +45,10 @@ class MyModule extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
 
         return parent::install() &&
-        $this->registerHook('displayTop') &&
-        $this->registerHook('backOfficeHeader');
+        $this->registerHook('displayTop');
     }
 
-    public function hookBackOfficeHeader($params){
 
-        $this->context->controller->addCSS($this->_path . 'views/css/mymod.css', 'all');
-        $this->context->controller->addJquery();
-        $this->context->controller->addJS($this->_path . 'views/js/mymod.js');
-
-    }
 
     public function hookDisplayTop($params)
     {
