@@ -59,8 +59,9 @@ class MyModule extends Module
            WHERE ' . _DB_PREFIX_ . 'shortcode_data_lang.id_lang = '. $default_lang );
 
         foreach($shortcodes as $shortcode){
+            $type = $shortcode['shortcode_content_type'];
             $shortcode_name = $shortcode['shortcode_name'];
-            $shortcode_content = $shortcode['shortcode_status'] ? $shortcode_name : '';
+            $shortcode_content = $shortcode['shortcode_status'] ? $shortcode['shortcode_content_' . $type] : '';
             $this->context->smarty->assign('shortcode_'. $shortcode_name, $shortcode_content);
         }
     }

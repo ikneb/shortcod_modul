@@ -13,6 +13,7 @@ $sql[] = 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'shortcode_data` (
 `shortcode_content_textarea` varchar(255),
 `shortcode_content_tinymce` varchar(255),
 `shortcode_content_file` varchar(255),
+`shortcode_content_type` varchar(50),
 `shortcode_status` int(1),
 PRIMARY KEY (`id_shortcode_data`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';

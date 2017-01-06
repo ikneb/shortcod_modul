@@ -1,7 +1,7 @@
 
 
 
-.shortcode__wrapper-tinymce, .shortcode__wrapper-file{
+.shortcode__wrapper-tinymce, .shortcode__wrapper-file, .shortcode__wrapper-textarea{
     display: none;
 }
 

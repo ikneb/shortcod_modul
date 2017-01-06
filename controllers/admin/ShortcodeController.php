@@ -14,7 +14,6 @@ class ShortcodeController extends ModuleAdminController
         $this->context = Context::getContext();
         $this->bootstrap = true;
 
-
 		parent::__construct();
 
         $this->fieldImageSettings = array(
@@ -42,7 +41,7 @@ class ShortcodeController extends ModuleAdminController
             return;
         }
 
-        $image = _PS_SHORT_IMG_DIR_.$obj->id.'.'.$this->imageType;
+        $image = _PS_IMG_DIR_.$obj->id.'.'.$this->imageType;
         $image_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'.'.$this->imageType, 350, $this->imageType, true, true);
 
         $image_size = file_exists($image) ? filesize($image) / 1000 : false;
@@ -56,7 +55,7 @@ class ShortcodeController extends ModuleAdminController
                 $format['category'] = $image_type;
             } elseif ($formatted_small == $image_type['name']) {
                 $format['small'] = $image_type;
-                $thumb = _PS_SHORT_IMG_DIR_.$obj->id.'-'.$image_type['name'].'.'.$this->imageType;
+                $thumb = _PS_IMG_DIR_.$obj->id.'-'.$image_type['name'].'.'.$this->imageType;
                 if (is_file($thumb)) {
                     $thumb_url = ImageManager::thumbnail($thumb, $this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, (int)$image_type['width'], $this->imageType, true, true);
                 }
@@ -70,18 +69,21 @@ class ShortcodeController extends ModuleAdminController
         }
 
 
-
-
         $thumb_size = file_exists($thumb) ? filesize($thumb) / 1000 : false;
 
         $menu_thumbnails = [];
         for ($i = 0; $i < 3; $i++) {
-            if (file_exists(_PS_SHORT_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg')) {
+            if (file_exists(_PS_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg')) {
                 $menu_thumbnails[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
                 $menu_thumbnails[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$obj->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
                 $menu_thumbnails[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='.$i.'&id_category='.(int)$obj->id;
             }
         }
+        $type_field = array(
+            array('name' => 'textarea'),
+            array('name' => 'tinymce'),
+            array('name' => 'file')
+        );
 
         $this->fields_form = array(
             'legend' => array(
@@ -103,6 +105,15 @@ class ShortcodeController extends ModuleAdminController
                     'size' => 50,
                     'lang' => true,
                     'required' => false
+                ),
+
+                array('type' => 'select',
+                    'label' => $this->l('Choose'),
+                    'name' => 'shortcode_content_type',
+                    'options' => array(
+                        'query' => $type_field,
+                        'id' => 'name',
+                        'name' => 'name')
                 ),
 
                 array(
@@ -198,18 +209,7 @@ class ShortcodeController extends ModuleAdminController
                 'title' => $this->l('Description'),
                 'width' => 300,
             );
-            /*$this->fields_list['shortcode_content_textarea'] = array(
-                'title' => $this->l('Content'),
-                'width' => 500,
-            );
-           $this->fields_list['shortcode_content_tinymce'] = array(
-                'title' => $this->l('Content'),
-                'width' => 500,
-            );
-           $this->fields_list['shortcode_content_file'] = array(
-                'title' => $this->l('Content'),
-                'width' => 500,
-            );*/
+
            $this->fields_list['shortcode_status'] = array(
                     'title' => $this->l('Status'),
                     'width' => 50,
@@ -247,7 +247,7 @@ class ShortcodeController extends ModuleAdminController
                         } else {
                             if (!ImageManager::resize(
                                 $tmpName,
-                                _PS_SHORT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.'.$this->imageType,
+                                _PS_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.'.$this->imageType,
                                 (int)$image_type['width'],
                                 (int)$image_type['height']
                             )) {
@@ -255,7 +255,7 @@ class ShortcodeController extends ModuleAdminController
                             } elseif (($infos = getimagesize($tmpName)) && is_array($infos)) {
                                 ImageManager::resize(
                                     $tmpName,
-                                    _PS_SHORT_IMG_DIR_.$id_category.'_'.$name.'.'.$this->imageType,
+                                    _PS_IMG_DIR_.$id_category.'_'.$name.'.'.$this->imageType,
                                     (int)$infos[0],
                                     (int)$infos[1]
                                 );
@@ -273,5 +273,14 @@ class ShortcodeController extends ModuleAdminController
         return $ret;
     }
 
+
+    public function postProcess(){
+
+        $post = parent::postProcess();
+
+
+
+        return $post;
+    }
 
 }
