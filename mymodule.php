@@ -52,17 +52,32 @@ class MyModule extends Module
 
     public function hookDisplayTop($params)
     {
+
         $default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
         $shortcodes = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'shortcode_data
            LEFT JOIN ' . _DB_PREFIX_ . 'shortcode_data_lang
            ON  ' . _DB_PREFIX_ . 'shortcode_data.id_shortcode_data = ' . _DB_PREFIX_ . 'shortcode_data_lang.id_shortcode_data
            WHERE ' . _DB_PREFIX_ . 'shortcode_data_lang.id_lang = '. $default_lang );
 
+
+
         foreach($shortcodes as $shortcode){
             $type = $shortcode['shortcode_content_type'];
             $shortcode_name = $shortcode['shortcode_name'];
-            $shortcode_content = $shortcode['shortcode_status'] ? $shortcode['shortcode_content_' . $type] : '';
+            $status = $shortcode['shortcode_status'];
+
+            $shortcode_content = '';
+            if($type == 'file'){
+                $img = $shortcode['id_shortcode_data'].'_shortcode_content_file.jpg';
+                $file = _PS_IMG_DIR_.$shortcode['id_shortcode_data'].'_shortcode_content_file.jpg';
+                if(file_exists($file)) {
+                    $shortcode_content = $status ? '<img src="img/'.$img.'">' : '';
+                }
+            }else{
+                $shortcode_content = $status ? $shortcode['shortcode_content_' . $type] : '';
+            }
             $this->context->smarty->assign('shortcode_'. $shortcode_name, $shortcode_content);
+
         }
     }
 

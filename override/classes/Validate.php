@@ -26,7 +26,7 @@ class Validate extends ValidateCore
                 }
             }
 
-        if(preg_match('/[а-яА-Я\s]+/usmi', $shortcode_name)){
+        if(!preg_match('/^[a-z]+$/', $shortcode_name)){
             $context->controller->errors[] = Tools::displayError('Please only latin and not space');
             return false;
         }

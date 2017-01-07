@@ -8,8 +8,8 @@ $( document ).ready(function() {
 
 
     $('#shortcode_content_file-name').closest('.form-group').parents('.form-group').addClass('shortcode__wrapper-file');
-    $('.shortcode__tinymce').closest('.translatable-field').parents('.form-group').addClass('shortcode__wrapper-tinymce');
-    $('.shortcode__textarea').closest('.translatable-field').parents('.form-group').addClass('shortcode__wrapper-textarea');
+    $('.shortcode__tinymce').closest('.form-group').addClass('shortcode__wrapper-tinymce');
+    $('.shortcode__textarea').closest('.form-group').addClass('shortcode__wrapper-textarea');
     $('.shortcode__description').closest('.form-group').attr('id', 'shortcode__wrapper-description');
     $('.shortcode__wrapper-' + shortcode_content_type).css('display', 'block');
 

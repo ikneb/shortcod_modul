@@ -34,9 +34,6 @@ class ShortcodeController extends ModuleAdminController
 
     public function renderForm()
     {
-        $obj = $this->loadObject(true);
-        $context = Context::getContext();
-
         if (!($obj = $this->loadObject(true))) {
             return;
         }
@@ -48,37 +45,39 @@ class ShortcodeController extends ModuleAdminController
         $images_types = ImageType::getImagesTypes('categories');
         $format = array();
         $thumb = $thumb_url = '';
-        $formatted_category= ImageType::getFormattedName('category');
-        $formatted_small = ImageType::getFormattedName('small');
+        $formated_category= ImageType::getFormatedName('category');
+        $formated_medium = ImageType::getFormatedName('medium');
         foreach ($images_types as $k => $image_type) {
-            if ($formatted_category == $image_type['name']) {
+            if ($formated_category == $image_type['name']) {
                 $format['category'] = $image_type;
-            } elseif ($formatted_small == $image_type['name']) {
-                $format['small'] = $image_type;
+            } elseif ($formated_medium == $image_type['name']) {
+                $format['medium'] = $image_type;
                 $thumb = _PS_IMG_DIR_.$obj->id.'-'.$image_type['name'].'.'.$this->imageType;
                 if (is_file($thumb)) {
                     $thumb_url = ImageManager::thumbnail($thumb, $this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, (int)$image_type['width'], $this->imageType, true, true);
                 }
             }
         }
+        
 
         if (!is_file($thumb)) {
             $thumb = $image;
             $thumb_url = ImageManager::thumbnail($image, $this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, 125, $this->imageType, true, true);
             ImageManager::resize(_PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, _PS_TMP_IMG_DIR_.$this->table.'_'.(int)$obj->id.'-thumb.'.$this->imageType, (int)$image_type['width'], (int)$image_type['height']);
+
         }
 
-
         $thumb_size = file_exists($thumb) ? filesize($thumb) / 1000 : false;
-
         $menu_thumbnails = [];
         for ($i = 0; $i < 3; $i++) {
             if (file_exists(_PS_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg')) {
                 $menu_thumbnails[$i]['type'] = HelperImageUploader::TYPE_IMAGE;
-                $menu_thumbnails[$i]['image'] = ImageManager::thumbnail(_PS_CAT_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$obj->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
+                $menu_thumbnails[$i]['image'] = ImageManager::thumbnail(_PS_IMG_DIR_.(int)$obj->id.'-'.$i.'_thumb.jpg', $this->context->controller->table.'_'.(int)$obj->id.'-'.$i.'_thumb.jpg', 100, 'jpg', true, true);
                 $menu_thumbnails[$i]['delete_url'] = Context::getContext()->link->getAdminLink('AdminCategories').'&deleteThumb='.$i.'&id_category='.(int)$obj->id;
             }
         }
+
+
         $type_field = array(
             array('name' => 'textarea'),
             array('name' => 'tinymce'),
@@ -137,8 +136,7 @@ class ShortcodeController extends ModuleAdminController
                     'required' =>  false,
                 ),
 
-                array(
-
+                array(  
                     'type' => 'file',
                     'label' => $this->l('Select a file:'),
                     'name' => 'shortcode_content_file',
@@ -237,6 +235,44 @@ class ShortcodeController extends ModuleAdminController
                 if (!isset($images_types)) {
                     $images_types = ImageType::getImagesTypes('categories');
                 }
+                $formated_medium = ImageType::getFormatedName('medium');
+                foreach ($images_types as $k => $image_type) {
+                    if ($formated_medium == $image_type['name']) {
+                        if ($error = ImageManager::validateUpload($_FILES[$name], Tools::getMaxUploadSize())) {
+                            $this->errors[] = $error;
+                        } elseif (!($tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$name]['tmp_name'], $tmpName)) {
+                            $ret = false;
+                        } else {
+                            if (!ImageManager::resize(
+                                $tmpName,
+                                _PS_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.'.$this->imageType,
+                                (int)$image_type['width'],
+                                (int)$image_type['height']
+                            )) {
+                                $this->errors = Tools::displayError('An error occurred while uploading thumbnail image.');
+                            } elseif (($infos = getimagesize($tmpName)) && is_array($infos)) {
+                                ImageManager::resize(
+                                    $tmpName,
+                                    _PS_IMG_DIR_.$id_category.'_'.$name.'.'.$this->imageType,
+                                    (int)$infos[0],
+                                    (int)$infos[1]
+                                );
+                            }
+                            if (count($this->errors)) {
+                                $ret = false;
+                            }
+                            unlink($tmpName);
+                            $ret = true;
+                        }
+                    }
+                }
+            }
+        }
+/*            $name = 'shortcode_content_file';
+            if ($_FILES[$name]['name'] != null) {
+                if (!isset($images_types)) {
+                    $images_types = ImageType::getImagesTypes('categories');
+                }
                 $formatted_small = ImageType::getFormattedName('small');
                 foreach ($images_types as $k => $image_type) {
                     if ($formatted_small == $image_type['name']) {
@@ -269,7 +305,7 @@ class ShortcodeController extends ModuleAdminController
                     }
                 }
             }
-        }
+        }*/
         return $ret;
     }
 
